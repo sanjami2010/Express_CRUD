@@ -63,18 +63,25 @@ let foundPost = posts.find(post => {
 //update single post---->not sure how to do this
 
 app.put('/posts/:id', function (req, res) {
-  let id = parseInt(req.params.id);
-  let updatedPost = req.body;
-  if (posts["post" + id] != null) {
-    //update post
-    posts["post" + id] = updatedPost;
-   
-    console.log("updated successfully" + JSON.stringify(updatedPost, null, 2));
-    return res.end("updated successfully" + JSON.stringify(updatedPost, null, 2));
+  
+  let id = req.params.id;
+  let foundPost = posts.find(post => {
+    return String(post.id) === id
+
+  })
+  if (!foundPost) {
+    return res.status(404).json({ message: "Post not found" })
   }
-  else {
-    res.end("post doesn't exist" + JSON.stringify(updatedPost, null, 2));
-  }
+  foundPost.title = req.body.title;
+  foundPost.body = req.body.body;
+  let stringedData = JSON.stringify(posts, null, 2);
+  fs.writeFile('posts.json', stringedData, function (err) {
+    if (err) {
+      return res.status(500).json({ message: err })
+    }
+    return res.status(200).json({message: "Post updated sucessfully"})
+  }) 
+
 })
 
 
