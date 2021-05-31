@@ -60,8 +60,7 @@ let foundPost = posts.find(post => {
   }
  
 })
-//update single post---->not sure how to do this
-
+//update single post----
 app.put('/posts/:id', function (req, res) {
   
   let id = req.params.id;
